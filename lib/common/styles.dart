@@ -68,3 +68,4 @@ final TextTheme textTheme = TextTheme(
 );
 
 const Color primaryColor = Color(0xFFF2BC5A);
+const Color customGreyColor = Color(0xFFF5F5F5);
