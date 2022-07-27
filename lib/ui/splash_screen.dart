@@ -4,7 +4,7 @@ import '../common/styles.dart';
 import 'home_page.dart';
 
 class SplashScreen extends StatefulWidget {
-  static const routeName = '/Splash_screen';
+  static const routeName = '/splash_screen';
 
   const SplashScreen({Key? key}) : super(key: key);
 
@@ -35,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
             SizedBox(
               width: 200,
               height: 200,
-              child: Image.asset('assets/halal_food.png'),
+              child: Image.network("https://restaurant-api.dicoding.dev/images/medium/25"),
             ),
             const SizedBox(height: 8),
             Text(
