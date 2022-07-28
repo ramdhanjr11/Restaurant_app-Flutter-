@@ -35,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
             SizedBox(
               width: 200,
               height: 200,
-              child: Image.network("https://restaurant-api.dicoding.dev/images/medium/25"),
+              child: Image.asset('assets/halal_food.png'),
             ),
             const SizedBox(height: 8),
             Text(

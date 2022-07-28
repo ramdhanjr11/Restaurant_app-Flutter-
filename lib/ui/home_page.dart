@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/common/styles.dart';
+import 'package:restaurant_app/ui/detail_page.dart';
 
 import '../data/model/restaurants_model.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   static const routeName = '/home_page';
-  final _customTextPadding = const EdgeInsets.only(left: 16, top: 8);
 
   const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final _customTextPadding = const EdgeInsets.only(left: 16, top: 8);
 
   @override
   Widget build(BuildContext context) {
@@ -26,22 +33,7 @@ class HomePage extends StatelessWidget {
                     Align(
                       alignment: Alignment.topRight,
                       child: InkWell(
-                        onTap: () {
-                          showDialog(context: context, builder: (context) =>
-                              AlertDialog(
-                                title: const Text('Information'),
-                                content: const Text('Coming soon feature'),
-                                actions: [
-                                  OutlinedButton(
-                                    child: const Text('Ok'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  )
-                                ],
-                              )
-                          );
-                        },
+                        onTap: () => _buildComingSoonDialog(context),
                         child: Container(
                           width: 140,
                           padding: const EdgeInsets.all(8),
@@ -104,6 +96,8 @@ class HomePage extends StatelessWidget {
                             color: Colors.black,
                           ),
                         ),
+                        onSubmitted: (string) =>
+                            _buildComingSoonDialog(context),
                       ),
                     ),
                     ListView.builder(
@@ -121,83 +115,109 @@ class HomePage extends StatelessWidget {
         ));
   }
 
+  Future<dynamic> _buildComingSoonDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text('Information'),
+              content: const Text('Coming soon feature'),
+              actions: [
+                OutlinedButton(
+                  child: const Text('Ok'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ));
+  }
+
   Widget _buildListFood(BuildContext context, Restaurant restaurant) {
-    return Container(
-      height: 100,
-      margin: const EdgeInsets.only(left: 16, right: 16, top: 12),
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Colors.white,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-              flex: 2,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.network(
-                  restaurant.pictureId,
-                  fit: BoxFit.fill,
-                ),
-              )),
-          Expanded(
-            flex: 3,
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    restaurant.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.subtitle1,
-                    textAlign: TextAlign.start,
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, DetailPage.routeName,
+            arguments: restaurant);
+      },
+      child: Container(
+        height: 100,
+        margin: const EdgeInsets.only(left: 16, right: 16, top: 12),
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+                flex: 2,
+                child: Hero(
+                  tag: restaurant.pictureId,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.network(
+                      restaurant.pictureId,
+                      fit: BoxFit.fill,
+                    ),
                   ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.location_pin,
-                        size: 15,
-                        color: primaryColor,
-                      ),
-                      const SizedBox(width: 4),
-                      Flexible(
-                        child: Text(
-                          restaurant.city,
+                )),
+            Expanded(
+              flex: 3,
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      restaurant.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.subtitle1,
+                      textAlign: TextAlign.start,
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.location_pin,
+                          size: 15,
+                          color: primaryColor,
+                        ),
+                        const SizedBox(width: 4),
+                        Flexible(
+                          child: Text(
+                            restaurant.city,
+                            style: Theme.of(context).textTheme.subtitle2,
+                            textAlign: TextAlign.start,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.star,
+                          size: 15,
+                          color: Colors.yellow,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          // 'test',
+                          restaurant.rating.toString(),
                           style: Theme.of(context).textTheme.subtitle2,
                           textAlign: TextAlign.start,
-                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.star,
-                        size: 15,
-                        color: Colors.yellow,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        // 'test',
-                        restaurant.rating.toString(),
-                        style: Theme.of(context).textTheme.subtitle2,
-                        textAlign: TextAlign.start,
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }

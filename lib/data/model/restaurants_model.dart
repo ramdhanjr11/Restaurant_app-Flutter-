@@ -28,19 +28,19 @@ class Restaurant {
 
     // parse menus to menu
     Map<String, dynamic> parseMenus = restaurant['menus'];
-    List<Map<String, dynamic>> emptyListMenus = [];
+    List<Map<String, dynamic>> emptyListFoodMenus = [];
+    List<Map<String, dynamic>> emptyListDrinkMenus = [];
 
-    if (parseMenus.containsKey('foods')) {
-      parseMenus['foods'].forEach((value) {
-        emptyListMenus.add(value);
-      });
-      menus.add(Menu(menuType: 'foods', menuList: emptyListMenus));
-    } else {
-      parseMenus['drinks'].forEach((value) {
-        emptyListMenus.add(value);
-      });
-      menus.add(Menu(menuType: 'drinks', menuList: emptyListMenus));
-    }
+    parseMenus['foods'].forEach((value) {
+      emptyListFoodMenus.add(value);
+    });
+
+    parseMenus['drinks'].forEach((value) {
+      emptyListDrinkMenus.add(value);
+    });
+
+    menus.add(Menu(menuType: 'foods', menuList: emptyListFoodMenus));
+    menus.add(Menu(menuType: 'drinks', menuList: emptyListDrinkMenus));
   }
 }
 
