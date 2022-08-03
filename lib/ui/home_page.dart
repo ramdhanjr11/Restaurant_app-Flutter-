@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/common/styles.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
@@ -125,9 +126,7 @@ class _HomePageState extends State<HomePage> {
             child: Text(value.message),
           );
         } else if (value.state == ResultState.error) {
-          return Center(
-            child: Text(value.message),
-          );
+          return _buildErrorView(context, value.message);
         } else {
           return const Center(child: Text(''));
         }
@@ -235,6 +234,27 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorView(BuildContext context, String message) {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Center(
+        child: Column(
+          children: [
+            Lottie.asset('assets/error_404.json', width: 200, height: 200),
+            Text(
+              message,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(color: Colors.red),
+              textAlign: TextAlign.center,
             )
           ],
         ),

@@ -132,7 +132,7 @@ class _DetailPageState extends State<DetailPage> {
                   child: Chip(
                     label: Text(
                       data.categories[index].name,
-                      style: Theme.of(context).textTheme.headline6,
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
                 )),
