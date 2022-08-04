@@ -3,6 +3,7 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/common/styles.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
+import 'package:restaurant_app/ui/search_page.dart';
 import 'package:restaurant_app/widgets/restaurant_card.dart';
 
 class HomePage extends StatefulWidget {
@@ -65,7 +66,9 @@ class _HomePageState extends State<HomePage> {
                   child: Text(
                     'Grab your',
                     style: Theme.of(context).textTheme.headline4?.copyWith(
-                        color: Colors.black, fontWeight: FontWeight.w600),
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                        ),
                   ),
                 ),
                 Container(
@@ -73,7 +76,9 @@ class _HomePageState extends State<HomePage> {
                   child: Text(
                     'delicious meal!',
                     style: Theme.of(context).textTheme.headline4?.copyWith(
-                        color: Colors.black, fontWeight: FontWeight.bold),
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                 ),
                 Container(
@@ -85,14 +90,19 @@ class _HomePageState extends State<HomePage> {
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(50),
-                          borderSide: BorderSide.none),
+                        borderRadius: BorderRadius.circular(50),
+                        borderSide: BorderSide.none,
+                      ),
                       prefixIcon: const Icon(
                         Icons.search,
                         color: Colors.black,
                       ),
                     ),
-                    onSubmitted: (string) => _buildComingSoonDialog(context),
+                    onSubmitted: (value) => Navigator.pushNamed(
+                      context,
+                      SearchPage.routeName,
+                      arguments: value,
+                    ),
                   ),
                 ),
                 _buildList()

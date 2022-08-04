@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:restaurant_app/data/model/detail_model.dart';
 import 'package:restaurant_app/data/model/restaurants_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:restaurant_app/data/model/search_model.dart';
 
 class ApiService {
   static const _baseUrl = "https://restaurant-api.dicoding.dev/";
@@ -32,10 +33,19 @@ class ApiService {
   Future<DetailRestaurantResponse> getDetailRestaurant(String id) async {
     final response = await http.get(Uri.parse(_baseUrl + _detailUrl + id));
     if (response.statusCode == 200) {
-      log("this error will be appeared");
       return DetailRestaurantResponse.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to load detail restaurant');
+    }
+  }
+
+  Future<SearchResponse> getSearchResult(String keyword) async {
+    final response = await http.get(Uri.parse(_baseUrl + _searchUrl + keyword));
+    if (response.statusCode == 200) {
+      log("Debugging : ${response.body}");
+      return SearchResponse.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load api search');
     }
   }
 }

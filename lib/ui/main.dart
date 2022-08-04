@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
 import 'package:restaurant_app/ui/detail_page.dart';
+import 'package:restaurant_app/ui/search_page.dart';
 import '../common/styles.dart';
 import '../data/model/restaurants_model.dart';
 import 'home_page.dart';
@@ -44,8 +45,12 @@ class MyApp extends StatelessWidget {
           SplashScreen.routeName: (context) => const SplashScreen(),
           HomePage.routeName: (context) => const HomePage(),
           DetailPage.routeName: (context) => DetailPage(
-              restaurant:
-                  ModalRoute.of(context)?.settings.arguments as Restaurant)
+                restaurant:
+                    ModalRoute.of(context)?.settings.arguments as Restaurant,
+              ),
+          SearchPage.routeName: (context) => SearchPage(
+                keyword: ModalRoute.of(context)?.settings.arguments as String,
+              ),
         },
       ),
     );
