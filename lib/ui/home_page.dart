@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -121,6 +123,7 @@ class _HomePageState extends State<HomePage> {
           );
         } else if (value.state == ResultState.hasData) {
           var restaurants = value.result.restaurants;
+          log("Debugging : $restaurants");
           return ListView.builder(
             itemBuilder: (context, index) =>
                 RestaurantCard(restaurant: restaurants[index]),

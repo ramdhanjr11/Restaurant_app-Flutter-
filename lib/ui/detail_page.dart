@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:restaurant_app/common/styles.dart';
 import 'package:restaurant_app/data/model/detail_model.dart';
-import 'package:provider/provider.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
 
 import '../data/api/api_service.dart';
@@ -53,6 +53,11 @@ class _DetailPageState extends State<DetailPage> {
             );
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: primaryColor,
+        child: const Icon(Icons.add_comment),
+        onPressed: () => _buildFormReview(context),
       ),
     );
   }
@@ -213,6 +218,33 @@ class _DetailPageState extends State<DetailPage> {
         title: Text(menu.drinks[index].name),
       ),
       itemCount: menu.drinks.length,
+    );
+  }
+
+  Future<dynamic> _buildFormReview(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          elevation: 0,
+          child: TextField(
+            decoration: InputDecoration(
+              hintText: 'Add comment',
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(50),
+                borderSide: BorderSide.none,
+              ),
+              prefixIcon: const Icon(
+                Icons.comment,
+                color: Colors.black,
+              ),
+            ),
+            onSubmitted: (value) {},
+          ),
+        );
+      },
     );
   }
 }
