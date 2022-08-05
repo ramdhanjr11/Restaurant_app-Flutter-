@@ -135,7 +135,10 @@ class _HomePageState extends State<HomePage> {
             child: Text(value.message),
           );
         } else if (value.state == ResultState.error) {
-          return ErrorView(message: value.message);
+          return const ErrorView(
+            message:
+                "Oopss, you are not connected to the internet. please close and open the app again.",
+          );
         } else {
           return const Center(child: Text(''));
         }

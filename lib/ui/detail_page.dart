@@ -4,6 +4,7 @@ import 'package:restaurant_app/common/styles.dart';
 import 'package:restaurant_app/data/model/detail_model.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
 import 'package:restaurant_app/widgets/coming_soon_dialog.dart';
+import 'package:restaurant_app/widgets/error_view.dart';
 
 import '../data/api/api_service.dart';
 import '../data/model/restaurants_model.dart';
@@ -46,12 +47,20 @@ class _DetailPageState extends State<DetailPage> {
               child: CircularProgressIndicator(),
             );
           } else {
-            final detailData =
-                Provider.of<RestaurantProvider>(context, listen: false)
-                    .resultDetail;
-            return SingleChildScrollView(
-              child: _buildDetailRestaurant(context, detailData.restaurant),
-            );
+            final provider =
+                Provider.of<RestaurantProvider>(context, listen: false);
+
+            if (provider.state == ResultState.error) {
+              return const ErrorView(
+                message:
+                    "Oopss, you are not connected to the internet. please close and open the app again.",
+              );
+            } else {
+              return SingleChildScrollView(
+                child: _buildDetailRestaurant(
+                    context, provider.resultDetail.restaurant),
+              );
+            }
           }
         },
       ),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/common/styles.dart';
@@ -37,16 +39,26 @@ class _SearchPageState extends State<SearchPage> {
           } else {
             final searchResult = Provider.of<RestaurantProvider>(context);
 
-            if (searchResult.resultSearch.founded == 0) {
-              return ErrorView(message: searchResult.message);
-            } else {
-              return ListView.builder(
-                itemCount: searchResult.resultSearch.founded,
-                itemBuilder: (context, index) {
-                  return RestaurantCard(
-                      restaurant: searchResult.resultSearch.restaurants[index]);
-                },
+            log(searchResult.state.toString());
+
+            if (searchResult.state == ResultState.error) {
+              return const ErrorView(
+                message:
+                    "Oopss, you are not connected to the internet. please close and open the app again.",
               );
+            } else {
+              if (searchResult.resultSearch.founded == 0) {
+                return ErrorView(message: searchResult.message);
+              } else {
+                return ListView.builder(
+                  itemCount: searchResult.resultSearch.founded,
+                  itemBuilder: (context, index) {
+                    return RestaurantCard(
+                        restaurant:
+                            searchResult.resultSearch.restaurants[index]);
+                  },
+                );
+              }
             }
           }
         },
