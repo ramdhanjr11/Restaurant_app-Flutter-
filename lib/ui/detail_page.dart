@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_app/common/styles.dart';
 import 'package:restaurant_app/data/model/detail_model.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
+import 'package:restaurant_app/widgets/coming_soon_dialog.dart';
 
 import '../data/api/api_service.dart';
 import '../data/model/restaurants_model.dart';
@@ -241,7 +242,10 @@ class _DetailPageState extends State<DetailPage> {
                 color: Colors.black,
               ),
             ),
-            onSubmitted: (value) {},
+            onSubmitted: (value) {
+              Navigator.pop(context);
+              buildComingSoonDialog(context);
+            },
           ),
         );
       },

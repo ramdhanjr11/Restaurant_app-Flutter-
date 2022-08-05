@@ -1,9 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/common/styles.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
+import 'package:restaurant_app/widgets/error_view.dart';
 import 'package:restaurant_app/widgets/restaurant_card.dart';
 
 class SearchPage extends StatefulWidget {
@@ -36,17 +35,19 @@ class _SearchPageState extends State<SearchPage> {
               child: CircularProgressIndicator(),
             );
           } else {
-            final searchResult =
-                Provider.of<RestaurantProvider>(context, listen: false)
-                    .resultSearch;
-            log("Debugging : ${searchResult.restaurants}");
-            return ListView.builder(
-              itemCount: searchResult.founded,
-              itemBuilder: (context, index) {
-                return RestaurantCard(
-                    restaurant: searchResult.restaurants[index]);
-              },
-            );
+            final searchResult = Provider.of<RestaurantProvider>(context);
+
+            if (searchResult.resultSearch.founded == 0) {
+              return ErrorView(message: searchResult.message);
+            } else {
+              return ListView.builder(
+                itemCount: searchResult.resultSearch.founded,
+                itemBuilder: (context, index) {
+                  return RestaurantCard(
+                      restaurant: searchResult.resultSearch.restaurants[index]);
+                },
+              );
+            }
           }
         },
       ),

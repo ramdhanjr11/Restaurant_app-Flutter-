@@ -1,12 +1,12 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/common/styles.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
 import 'package:restaurant_app/ui/search_page.dart';
+import 'package:restaurant_app/widgets/error_view.dart';
 import 'package:restaurant_app/widgets/restaurant_card.dart';
+
+import '../widgets/coming_soon_dialog.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/home_page';
@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
                 Align(
                   alignment: Alignment.topRight,
                   child: InkWell(
-                    onTap: () => _buildComingSoonDialog(context),
+                    onTap: () => buildComingSoonDialog(context),
                     child: Container(
                       width: 140,
                       padding: const EdgeInsets.all(8),
@@ -123,7 +123,6 @@ class _HomePageState extends State<HomePage> {
           );
         } else if (value.state == ResultState.hasData) {
           var restaurants = value.result.restaurants;
-          log("Debugging : $restaurants");
           return ListView.builder(
             itemBuilder: (context, index) =>
                 RestaurantCard(restaurant: restaurants[index]),
@@ -136,50 +135,11 @@ class _HomePageState extends State<HomePage> {
             child: Text(value.message),
           );
         } else if (value.state == ResultState.error) {
-          return _buildErrorView(context, value.message);
+          return ErrorView(message: value.message);
         } else {
           return const Center(child: Text(''));
         }
       },
-    );
-  }
-
-  Future<dynamic> _buildComingSoonDialog(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Information'),
-        content: const Text('Coming soon feature'),
-        actions: [
-          OutlinedButton(
-            child: const Text('Ok'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildErrorView(BuildContext context, String message) {
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Center(
-        child: Column(
-          children: [
-            Lottie.asset('assets/error_404.json', width: 200, height: 200),
-            Text(
-              message,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium!
-                  .copyWith(color: Colors.red),
-              textAlign: TextAlign.center,
-            )
-          ],
-        ),
-      ),
     );
   }
 }

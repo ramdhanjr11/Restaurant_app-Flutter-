@@ -49,7 +49,7 @@ class ApiService {
     }
   }
 
-  Future<AddReviewResponse> addReview(
+  Future<AddReviewResponse> sendReview(
       String id, String name, String review) async {
     final response = await http.post(
       Uri.parse(_baseUrl + _review),
