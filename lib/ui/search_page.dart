@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/common/styles.dart';
+import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
 import 'package:restaurant_app/widgets/error_view.dart';
 import 'package:restaurant_app/widgets/restaurant_card.dart';
@@ -20,48 +21,41 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Search Result'),
-        centerTitle: true,
-        elevation: 0,
+    return ChangeNotifierProvider(
+      create: (context) => RestaurantProvider(apiService: ApiService())
+          .getSearchResult(widget.keyword),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Search Result'),
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: customGreyColor,
+        ),
         backgroundColor: customGreyColor,
-      ),
-      backgroundColor: customGreyColor,
-      body: FutureBuilder(
-        future: Provider.of<RestaurantProvider>(context, listen: false)
-            .fetchSearchResult(widget.keyword),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            final searchResult = Provider.of<RestaurantProvider>(context);
-
-            log(searchResult.state.toString());
-
-            if (searchResult.state == ResultState.error) {
+        body: Consumer<RestaurantProvider>(
+          builder: (context, value, _) {
+            if (value.state == ResultState.loading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (value.state == ResultState.error) {
               return const ErrorView(
                 message:
                     "Oopss, you are not connected to the internet. please close and open the app again.",
               );
+            } else if (value.state == ResultState.noData) {
+              return ErrorView(message: value.message);
             } else {
-              if (searchResult.resultSearch.founded == 0) {
-                return ErrorView(message: searchResult.message);
-              } else {
-                return ListView.builder(
-                  itemCount: searchResult.resultSearch.founded,
-                  itemBuilder: (context, index) {
-                    return RestaurantCard(
-                        restaurant:
-                            searchResult.resultSearch.restaurants[index]);
-                  },
-                );
-              }
+              return ListView.builder(
+                itemCount: value.resultSearch.founded,
+                itemBuilder: (context, index) {
+                  return RestaurantCard(
+                      restaurant: value.resultSearch.restaurants[index]);
+                },
+              );
             }
-          }
-        },
+          },
+        ),
       ),
     );
   }

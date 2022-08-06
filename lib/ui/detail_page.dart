@@ -30,44 +30,49 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(data.name),
-        centerTitle: true,
-        elevation: 0,
+    return ChangeNotifierProvider(
+      create: (context) => RestaurantProvider(apiService: ApiService())
+          .getRestaurantDetail(data.id),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(data.name),
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: customGreyColor,
+        ),
         backgroundColor: customGreyColor,
-      ),
-      backgroundColor: customGreyColor,
-      body: FutureBuilder(
-        future: Provider.of<RestaurantProvider>(context, listen: false)
-            .fetchDetailRestaurant(data.id),
-        builder: (context, value) {
-          if (value.connectionState != ConnectionState.done) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            final provider =
-                Provider.of<RestaurantProvider>(context, listen: false);
-
-            if (provider.state == ResultState.error) {
+        body: Consumer<RestaurantProvider>(
+          builder: (context, value, _) {
+            if (value.state == ResultState.loading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (value.state == ResultState.error) {
               return const ErrorView(
                 message:
                     "Oopss, you are not connected to the internet. please close and open the app again.",
               );
-            } else {
+            } else if (value.state == ResultState.noData) {
+              return const ErrorView(
+                message: "Empty data, please back and open again.",
+              );
+            } else if (value.state == ResultState.hasData) {
               return SingleChildScrollView(
                 child: _buildDetailRestaurant(
-                    context, provider.resultDetail.restaurant),
+                    context, value.resultDetail.restaurant),
+              );
+            } else {
+              return const ErrorView(
+                message: "Oopss, sorry something was happened.",
               );
             }
-          }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: primaryColor,
-        child: const Icon(Icons.add_comment),
-        onPressed: () => _buildFormReview(context),
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: primaryColor,
+          child: const Icon(Icons.add_comment),
+          onPressed: () => _buildFormReview(context),
+        ),
       ),
     );
   }

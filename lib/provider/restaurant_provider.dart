@@ -14,6 +14,16 @@ class RestaurantProvider extends ChangeNotifier {
     _fetchAllRestaurants();
   }
 
+  RestaurantProvider getRestaurantDetail(String id) {
+    _fetchDetailRestaurant(id);
+    return this;
+  }
+
+  RestaurantProvider getSearchResult(String keyword) {
+    _fetchSearchResult(keyword);
+    return this;
+  }
+
   late RestaurantResponse _restaurantResponse;
   late DetailRestaurantResponse _detailResponse;
   late SearchResponse _searchResponse;
@@ -49,7 +59,7 @@ class RestaurantProvider extends ChangeNotifier {
     }
   }
 
-  Future<dynamic> fetchDetailRestaurant(String id) async {
+  Future<dynamic> _fetchDetailRestaurant(String id) async {
     try {
       _state = ResultState.loading;
       notifyListeners();
@@ -70,18 +80,23 @@ class RestaurantProvider extends ChangeNotifier {
     }
   }
 
-  Future<dynamic> fetchSearchResult(String keyword) async {
+  Future<dynamic> _fetchSearchResult(String keyword) async {
     try {
+      _state = ResultState.loading;
+      notifyListeners();
       final response = await apiService.getSearchResult(keyword);
       if (response.founded < 1) {
+        _state = ResultState.noData;
         _searchResponse = response;
         notifyListeners();
         return _message = 'Data not found';
       } else {
+        _state = ResultState.hasData;
         notifyListeners();
         return _searchResponse = response;
       }
     } catch (e) {
+      _state = ResultState.error;
       notifyListeners();
       return _message = 'Error -> $e';
     }
