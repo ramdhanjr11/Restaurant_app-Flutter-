@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/utils/notification_helper.dart';
 
-import '../ui/main.dart';
+import '../main.dart';
 
 final ReceivePort port = ReceivePort();
 

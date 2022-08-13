@@ -11,10 +11,10 @@ import 'package:restaurant_app/ui/search_page.dart';
 import 'package:restaurant_app/utils/background_service.dart';
 import 'package:restaurant_app/utils/navigation.dart';
 import 'package:restaurant_app/utils/notification_helper.dart';
-import '../common/styles.dart';
-import '../data/model/restaurants_model.dart';
-import 'home_page.dart';
-import 'splash_screen.dart';
+import 'common/styles.dart';
+import 'data/model/restaurants_model.dart';
+import 'ui/home_page.dart';
+import 'ui/splash_screen.dart';
 
 class PostHttpOverrides extends HttpOverrides {
   @override

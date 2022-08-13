@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:restaurant_app/data/model/add_review_model.dart';
 import 'package:restaurant_app/data/model/detail_model.dart';
 import 'package:restaurant_app/data/model/restaurants_model.dart';
 import 'package:http/http.dart' as http;
@@ -11,7 +10,6 @@ class ApiService {
   static const _listUrl = "list";
   static const _detailUrl = "detail/";
   static const _searchUrl = "search?q=";
-  static const _review = "review/";
   static const restaurantPictureUrls = [
     "https://restaurant-api.dicoding.dev/images/small/",
     "https://restaurant-api.dicoding.dev/images/medium/",
@@ -46,21 +44,6 @@ class ApiService {
       return SearchResponse.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to load api search');
-    }
-  }
-
-  Future<AddReviewResponse> sendReview(
-      String id, String name, String review) async {
-    final response = await http.post(
-      Uri.parse(_baseUrl + _review),
-      headers: {"Content-Type": "application/x-www-form-urlencoded"},
-      body: {"id": id, "name": name, "review": review},
-    );
-
-    if (response.statusCode == 200) {
-      return AddReviewResponse.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Failed to send review');
     }
   }
 }

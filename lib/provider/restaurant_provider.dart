@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
-import 'package:restaurant_app/data/model/add_review_model.dart';
 import 'package:restaurant_app/data/model/detail_model.dart';
 import 'package:restaurant_app/data/model/restaurants_model.dart';
 import 'package:restaurant_app/data/model/search_model.dart';
@@ -27,7 +26,6 @@ class RestaurantProvider extends ChangeNotifier {
   late RestaurantResponse _restaurantResponse;
   late DetailRestaurantResponse _detailResponse;
   late SearchResponse _searchResponse;
-  late AddReviewResponse _reviewResponse;
   ResultState _state = ResultState.loading;
   String _message = '';
 
@@ -35,7 +33,6 @@ class RestaurantProvider extends ChangeNotifier {
   RestaurantResponse get result => _restaurantResponse;
   DetailRestaurantResponse get resultDetail => _detailResponse;
   SearchResponse get resultSearch => _searchResponse;
-  AddReviewResponse get resultReview => _reviewResponse;
   ResultState get state => _state;
 
   Future<dynamic> _fetchAllRestaurants() async {
@@ -97,22 +94,6 @@ class RestaurantProvider extends ChangeNotifier {
       }
     } catch (e) {
       _state = ResultState.error;
-      notifyListeners();
-      return _message = 'Error -> $e';
-    }
-  }
-
-  Future<dynamic> sendReview(String id, String name, String review) async {
-    try {
-      final response = await apiService.sendReview(id, name, review);
-      if (response.error == true) {
-        notifyListeners();
-        return _message = 'Oops Something wrong when send the review';
-      } else {
-        notifyListeners();
-        return _reviewResponse = response;
-      }
-    } catch (e) {
       notifyListeners();
       return _message = 'Error -> $e';
     }
