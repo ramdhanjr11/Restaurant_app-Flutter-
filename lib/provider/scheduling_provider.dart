@@ -19,14 +19,15 @@ class SchedulingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> setReminderOption(bool value) async {
+  Future<void> _setReminderOption(bool value) async {
     _isScheduled = value;
     await prefs.setReminderOption(value);
     notifyListeners();
   }
 
   Future<bool> scheduledRestaurant(bool value) async {
-    _isScheduled = value;
+    _setReminderOption(value);
+    notifyListeners();
     if (_isScheduled) {
       print('Scheduling Restaurant Activated');
       notifyListeners();

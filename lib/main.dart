@@ -32,7 +32,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   HttpOverrides.global = PostHttpOverrides();
-  runApp(const MyApp());
 
   final NotificationHelper _notificationHelper = NotificationHelper();
   final BackgroundService _service = BackgroundService();
@@ -42,6 +41,8 @@ Future<void> main() async {
     await AndroidAlarmManager.initialize();
   }
   await _notificationHelper.initNotification(flutterLocalNotificationsPlugin);
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

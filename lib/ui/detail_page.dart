@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/common/styles.dart';
 import 'package:restaurant_app/data/model/detail_model.dart';
+import 'package:restaurant_app/provider/favorite_provider.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
+import 'package:restaurant_app/utils/database_helper.dart';
 import 'package:restaurant_app/widgets/coming_soon_dialog.dart';
 import 'package:restaurant_app/widgets/error_view.dart';
 
@@ -30,9 +32,17 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => RestaurantProvider(apiService: ApiService())
-          .getRestaurantDetail(data.id),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => RestaurantProvider(apiService: ApiService())
+              .getRestaurantDetail(data.id),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => FavoriteProvider(databaseHelper: DatabaseHelper())
+              .getFavorite(restaurant: data),
+        ),
+      ],
       child: Scaffold(
         appBar: AppBar(
           title: Text(data.name),
@@ -68,11 +78,14 @@ class _DetailPageState extends State<DetailPage> {
             }
           },
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: primaryColor,
-          child: const Icon(Icons.add_comment),
-          onPressed: () => _buildFormReview(context),
-        ),
+        floatingActionButton:
+            Consumer<FavoriteProvider>(builder: (context, provider, child) {
+          return FloatingActionButton(
+            backgroundColor: primaryColor,
+            child: Icon(Icons.favorite),
+            onPressed: () async {},
+          );
+        }),
       ),
     );
   }

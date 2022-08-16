@@ -45,7 +45,13 @@ class _SettingsPageState extends State<SettingsPage> {
                         value: _isReminder,
                         onChanged: (value) async {
                           setState(() {
-                            provider.setReminderOption(value);
+                            provider.scheduledRestaurant(value);
+                            final isScheduled = provider.isScheduled;
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(isScheduled
+                                  ? 'You have been turn on the reminder'
+                                  : 'You have been turn off the reminder'),
+                            ));
                           });
                         },
                       ),
