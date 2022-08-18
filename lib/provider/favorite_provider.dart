@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:restaurant_app/data/model/restaurants_model.dart';
 import 'package:restaurant_app/utils/database_helper.dart';
 
+import 'restaurant_provider.dart';
+
 class FavoriteProvider extends ChangeNotifier {
   late DatabaseHelper? databaseHelper;
 
@@ -15,6 +17,11 @@ class FavoriteProvider extends ChangeNotifier {
     databaseHelper = DatabaseHelper();
     _getAllFavorite();
   }
+
+  ResultState _state = ResultState.loading;
+  String _message = '';
+  ResultState get state => _state;
+  String get message => _message;
 
   FavoriteProvider getFavorite({required Restaurant restaurant}) {
     _getFavorite(restaurant);
@@ -40,7 +47,16 @@ class FavoriteProvider extends ChangeNotifier {
   }
 
   Future<void> _getAllFavorite() async {
-    _favorites = (await databaseHelper?.getRestaurants()) ?? [];
+    _state = ResultState.loading;
     notifyListeners();
+
+    _favorites = await databaseHelper?.getRestaurants() ?? [];
+    if (_favorites.isEmpty) {
+      _state = ResultState.noData;
+      notifyListeners();
+    } else {
+      _state = ResultState.hasData;
+      notifyListeners();
+    }
   }
 }

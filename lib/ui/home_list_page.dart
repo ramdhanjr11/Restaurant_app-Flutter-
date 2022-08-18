@@ -119,8 +119,9 @@ class _HomeListPageState extends State<HomeListPage> {
         } else if (value.state == ResultState.hasData) {
           var restaurants = value.result.restaurants;
           return ListView.builder(
-            itemBuilder: (context, index) =>
-                RestaurantCard(restaurant: restaurants[index]),
+            itemBuilder: (context, index) => RestaurantCard(
+              restaurant: restaurants[index],
+            ),
             itemCount: restaurants.length,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),

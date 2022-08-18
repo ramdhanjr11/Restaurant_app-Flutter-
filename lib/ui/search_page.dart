@@ -48,7 +48,8 @@ class _SearchPageState extends State<SearchPage> {
                 itemCount: value.resultSearch.founded,
                 itemBuilder: (context, index) {
                   return RestaurantCard(
-                      restaurant: value.resultSearch.restaurants[index]);
+                    restaurant: value.resultSearch.restaurants[index],
+                  );
                 },
               );
             }
