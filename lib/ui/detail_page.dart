@@ -1,10 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/common/styles.dart';
 import 'package:restaurant_app/data/model/detail_model.dart';
 import 'package:restaurant_app/provider/favorite_provider.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
-import 'package:restaurant_app/utils/database_helper.dart';
 import 'package:restaurant_app/widgets/coming_soon_dialog.dart';
 import 'package:restaurant_app/widgets/error_view.dart';
 
@@ -39,8 +40,7 @@ class _DetailPageState extends State<DetailPage> {
               .getRestaurantDetail(data.id),
         ),
         ChangeNotifierProvider(
-          create: (_) => FavoriteProvider(databaseHelper: DatabaseHelper())
-              .getFavorite(restaurant: data),
+          create: (_) => FavoriteProvider().getFavorite(restaurant: data),
         ),
       ],
       child: Scaffold(
@@ -80,10 +80,18 @@ class _DetailPageState extends State<DetailPage> {
         ),
         floatingActionButton:
             Consumer<FavoriteProvider>(builder: (context, provider, child) {
+          final isFavorite = provider.isFavorite;
           return FloatingActionButton(
             backgroundColor: primaryColor,
-            child: Icon(Icons.favorite),
-            onPressed: () async {},
+            child: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
+            onPressed: () async {
+              log('Debugging : ${provider.isFavorite.toString()}');
+              if (isFavorite) {
+                provider.deleteFavorite(widget.restaurant);
+              } else {
+                provider.addToFavorite(widget.restaurant);
+              }
+            },
           );
         }),
       ),

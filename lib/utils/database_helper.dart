@@ -11,7 +11,7 @@ class DatabaseHelper {
 
   factory DatabaseHelper() => _databaseHelper ?? DatabaseHelper._internal();
 
-  static String _tableName = "Restaurant.db";
+  static const String _tableName = "restaurant";
   static late Database _database;
 
   Future<Database> get database async {
@@ -24,15 +24,13 @@ class DatabaseHelper {
     var db = openDatabase(
       join(path, 'restaurant_db.db'),
       onCreate: (db, version) async {
-        await db.execute(
-          '''CREATE $_tableName (
-            id INTEGER PRIMARY KEY,
+        await db.execute('''CREATE TABLE $_tableName (
+            id TEXT PRIMARY KEY,
             name TEXT,
             description TEXT,
             pictureId TEXT,
             city TEXT,
-            rating DOUBLE)''',
-        );
+            rating DOUBLE)''');
       },
       version: 1,
     );
