@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:restaurant_app/data/model/restaurants_model.dart';
@@ -66,8 +67,12 @@ class NotificationHelper {
       iOS: iOSPlatformChannelSpecifics,
     );
 
+    var restaurants = restaurant.restaurants;
+    var randomIndex = Random().nextInt(restaurants.length);
+    var randomRestaurant = restaurants[randomIndex];
+
     var titleNotification = "<b>Restaurant App</b>";
-    var titleRestaurant = restaurant.restaurants[0].name;
+    var titleRestaurant = randomRestaurant.name;
 
     await flutterLocalNotificationsPlugin.show(
         0, titleNotification, titleRestaurant, platformChannelSpecifics,

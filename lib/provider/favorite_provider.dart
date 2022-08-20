@@ -7,7 +7,7 @@ import 'restaurant_provider.dart';
 class FavoriteProvider extends ChangeNotifier {
   late DatabaseHelper? databaseHelper;
 
-  late List<Restaurant> _favorites;
+  List<Restaurant> _favorites = [];
   List<Restaurant> get favorites => _favorites;
 
   bool _isFavorite = false;
@@ -19,9 +19,7 @@ class FavoriteProvider extends ChangeNotifier {
   }
 
   ResultState _state = ResultState.loading;
-  String _message = '';
   ResultState get state => _state;
-  String get message => _message;
 
   FavoriteProvider getFavorite({required Restaurant restaurant}) {
     _getFavorite(restaurant);
@@ -31,12 +29,14 @@ class FavoriteProvider extends ChangeNotifier {
   Future<void> addToFavorite(Restaurant restaurant) async {
     await databaseHelper?.insertRestaurant(restaurant);
     _isFavorite = true;
+    _getAllFavorite();
     notifyListeners();
   }
 
   Future<void> deleteFavorite(Restaurant restaurant) async {
     await databaseHelper?.deleteRestaurant(restaurant);
     _isFavorite = false;
+    _getAllFavorite();
     notifyListeners();
   }
 
@@ -47,6 +47,20 @@ class FavoriteProvider extends ChangeNotifier {
   }
 
   Future<void> _getAllFavorite() async {
+    _state = ResultState.loading;
+    notifyListeners();
+
+    _favorites = await databaseHelper?.getRestaurants() ?? [];
+    if (_favorites.isEmpty) {
+      _state = ResultState.noData;
+      notifyListeners();
+    } else {
+      _state = ResultState.hasData;
+      notifyListeners();
+    }
+  }
+
+  void getAllFavorite() async {
     _state = ResultState.loading;
     notifyListeners();
 
