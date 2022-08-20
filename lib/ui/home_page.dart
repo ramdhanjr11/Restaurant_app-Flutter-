@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:restaurant_app/common/styles.dart';
+import 'package:restaurant_app/provider/favorite_provider.dart';
 import 'package:restaurant_app/ui/favorite_page.dart';
 import 'package:restaurant_app/ui/home_list_page.dart';
 import 'package:restaurant_app/ui/settings_page.dart';
@@ -24,7 +26,8 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _listWidget = [
     HomeListPage(),
-    FavoritePage(),
+    ChangeNotifierProvider(
+        create: (_) => FavoriteProvider(), child: FavoritePage()),
     SettingsPage(),
   ];
 

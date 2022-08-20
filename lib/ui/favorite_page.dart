@@ -10,6 +10,8 @@ import 'package:restaurant_app/provider/restaurant_provider.dart';
 import 'package:restaurant_app/ui/detail_page.dart';
 import 'package:restaurant_app/widgets/no_data_view.dart';
 
+final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
+
 class FavoritePage extends StatefulWidget {
   FavoritePage({Key? key}) : super(key: key);
 
@@ -17,38 +19,53 @@ class FavoritePage extends StatefulWidget {
   State<FavoritePage> createState() => _FavoritePageState();
 }
 
-class _FavoritePageState extends State<FavoritePage> {
+class _FavoritePageState extends State<FavoritePage> with RouteAware {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    super.didPopNext();
+    context.read<FavoriteProvider>().getAllFavorite();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<FavoriteProvider>(
-      create: (_) => FavoriteProvider(),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Favorite Restaurants'),
-          centerTitle: true,
-          elevation: 0,
-          backgroundColor: customGreyColor,
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Favorite Restaurants'),
+        centerTitle: true,
+        elevation: 0,
         backgroundColor: customGreyColor,
-        body: Consumer<FavoriteProvider>(
-          builder: (context, provider, child) {
-            if (provider.state == ResultState.loading) {
-              return const Center(
-                child: CircularProgressIndicator(color: primaryColor),
-              );
-            } else if (provider.state == ResultState.noData) {
-              log('No data');
-              return const NoDataView();
-            } else {
-              return ListView.builder(
-                itemBuilder: (context, index) {
-                  return _favoriteCard(provider.favorites[index]);
-                },
-                itemCount: provider.favorites.length,
-              );
-            }
-          },
-        ),
+      ),
+      backgroundColor: customGreyColor,
+      body: Consumer<FavoriteProvider>(
+        builder: (context, provider, child) {
+          if (provider.state == ResultState.loading) {
+            return const Center(
+              child: CircularProgressIndicator(color: primaryColor),
+            );
+          } else if (provider.state == ResultState.noData) {
+            log('No data');
+            return const NoDataView();
+          } else {
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                return _favoriteCard(provider.favorites[index]);
+              },
+              itemCount: provider.favorites.length,
+            );
+          }
+        },
       ),
     );
   }
