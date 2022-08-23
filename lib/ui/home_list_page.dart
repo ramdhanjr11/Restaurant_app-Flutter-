@@ -8,7 +8,7 @@ import 'package:restaurant_app/widgets/restaurant_card.dart';
 import 'search_page.dart';
 
 class HomeListPage extends StatefulWidget {
-  HomeListPage({Key? key}) : super(key: key);
+  const HomeListPage({Key? key}) : super(key: key);
 
   @override
   State<HomeListPage> createState() => _HomeListPageState();

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/common/styles.dart';
 import 'package:restaurant_app/provider/favorite_provider.dart';
+import 'package:restaurant_app/provider/scheduling_provider.dart';
 import 'package:restaurant_app/ui/favorite_page.dart';
 import 'package:restaurant_app/ui/home_list_page.dart';
 import 'package:restaurant_app/ui/settings_page.dart';
+import 'package:restaurant_app/utils/shared_pref_reminder_helper.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/home_page';
@@ -25,10 +27,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   final List<Widget> _listWidget = [
-    HomeListPage(),
+    const HomeListPage(),
     ChangeNotifierProvider(
-        create: (_) => FavoriteProvider(), child: FavoritePage()),
-    SettingsPage(),
+      create: (_) => FavoriteProvider(),
+      child: const FavoritePage(),
+    ),
+    ChangeNotifierProvider(
+      create: (_) => SchedulingProvider(prefs: SharedPrefReminderHelper()),
+      child: SettingsPage(),
+    ),
   ];
 
   final List<BottomNavigationBarItem> _navBarItems = [

@@ -40,7 +40,6 @@ class DatabaseHelper {
   Future<void> insertRestaurant(Restaurant restaurant) async {
     final Database db = await database;
     await db.insert(_tableName, restaurant.toJson());
-    log('Data has been saved');
   }
 
   Future<void> deleteRestaurant(Restaurant restaurant) async {
@@ -50,7 +49,6 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [restaurant.id],
     );
-    log('Data has been deleted');
   }
 
   Future<bool> getRestaurantById(Restaurant restaurant) async {

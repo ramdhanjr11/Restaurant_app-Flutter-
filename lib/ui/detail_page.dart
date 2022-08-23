@@ -256,34 +256,4 @@ class _DetailPageState extends State<DetailPage> {
       itemCount: menu.drinks.length,
     );
   }
-
-  Future<dynamic> _buildFormReview(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          elevation: 0,
-          child: TextField(
-            decoration: InputDecoration(
-              hintText: 'Add comment',
-              filled: true,
-              fillColor: Colors.white,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(50),
-                borderSide: BorderSide.none,
-              ),
-              prefixIcon: const Icon(
-                Icons.comment,
-                color: Colors.black,
-              ),
-            ),
-            onSubmitted: (value) {
-              Navigator.pop(context);
-              buildComingSoonDialog(context);
-            },
-          ),
-        );
-      },
-    );
-  }
 }
