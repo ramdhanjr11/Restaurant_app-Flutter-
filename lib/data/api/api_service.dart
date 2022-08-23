@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:http/http.dart';
 import 'package:restaurant_app/data/model/detail_model.dart';
 import 'package:restaurant_app/data/model/restaurants_model.dart';
-import 'package:http/http.dart' as http;
 import 'package:restaurant_app/data/model/search_model.dart';
 
 class ApiService {
@@ -15,9 +15,10 @@ class ApiService {
     "https://restaurant-api.dicoding.dev/images/medium/",
     "https://restaurant-api.dicoding.dev/images/large/"
   ];
+  Client client = Client();
 
   Future<RestaurantResponse> getRestaurants() async {
-    final response = await http.get(Uri.parse(_baseUrl + _listUrl));
+    final response = await client.get(Uri.parse(_baseUrl + _listUrl));
     if (response.statusCode == 200) {
       return RestaurantResponse.fromJson(json.decode(response.body));
     } else {
@@ -30,7 +31,7 @@ class ApiService {
   }
 
   Future<DetailRestaurantResponse> getDetailRestaurant(String id) async {
-    final response = await http.get(Uri.parse(_baseUrl + _detailUrl + id));
+    final response = await client.get(Uri.parse(_baseUrl + _detailUrl + id));
     if (response.statusCode == 200) {
       return DetailRestaurantResponse.fromJson(json.decode(response.body));
     } else {
@@ -39,7 +40,8 @@ class ApiService {
   }
 
   Future<SearchResponse> getSearchResult(String keyword) async {
-    final response = await http.get(Uri.parse(_baseUrl + _searchUrl + keyword));
+    final response =
+        await client.get(Uri.parse(_baseUrl + _searchUrl + keyword));
     if (response.statusCode == 200) {
       return SearchResponse.fromJson(json.decode(response.body));
     } else {

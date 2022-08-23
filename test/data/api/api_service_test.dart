@@ -1,45 +1,65 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/testing.dart';
+import 'package:mockito/annotations.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/data/model/restaurants_model.dart';
+import 'package:http/http.dart' as http;
 
+import '../../utils/data_dummy_helper.dart';
+
+@GenerateMocks([http.Client])
 void main() {
-  ApiService apiService = ApiService();
+  final ApiService apiService = ApiService();
 
   test('should be succesful to parse json into model', () async {
-    var result = await apiService.getRestaurants();
-    var restaurantData = result.restaurants[0];
-    var parseData = Restaurant.fromJson(restaurantData.toJson());
+    apiService.client = MockClient(
+      (request) async {
+        final mapJson = DataDummyHelper().mapSuccessResponse;
+        return http.Response(json.encode(mapJson), 200);
+      },
+    );
 
-    expect(restaurantData.id, parseData.id);
-    expect(restaurantData.name, parseData.name);
-    expect(restaurantData.city, parseData.city);
-    expect(restaurantData.description, parseData.description);
-    expect(restaurantData.pictureId, parseData.pictureId);
-    expect(restaurantData.rating, parseData.rating);
+    var result = await apiService.getRestaurants();
+    var parseResponse = RestaurantResponse.fromJson(result.toJson());
+
+    expect(parseResponse.error, result.error);
+    expect(parseResponse.message, result.message);
+    expect(parseResponse.count, result.count);
+    expect(parseResponse.restaurants, result.restaurants);
   });
 
   test('should be successful to get restaurant and more than 1 data', () async {
+    apiService.client = MockClient(
+      (request) async {
+        final mapJson = DataDummyHelper().mapSuccessResponseWithData;
+        return http.Response(json.encode(mapJson), 200);
+      },
+    );
+
     var result = await apiService.getRestaurants();
     expect(result.restaurants.length, greaterThanOrEqualTo(1));
   });
 
   test('should be return the valid medium image url', () async {
     var mediumPictureUrl = "https://restaurant-api.dicoding.dev/images/medium/";
-    var result = await apiService.getMediumPictureUrl("1");
+    var result = apiService.getMediumPictureUrl("1");
     var fakePictureId = "1";
 
     expect(result, mediumPictureUrl + fakePictureId);
   });
 
   test('should be successful to get search result', () async {
-    var searchKeyword = "kafe";
+    apiService.client = MockClient(
+      (request) async {
+        final mapJson = DataDummyHelper().mapSearchSuccessResponse;
+        return http.Response(json.encode(mapJson), 200);
+      },
+    );
+
+    var searchKeyword = "Lorem ipsum";
     var result = await apiService.getSearchResult(searchKeyword);
     expect(result.error, false);
-  });
-
-  test('should be return same data that get from detail restaurant', () async {
-    var restaurantId = "rqdv5juczeskfw1e867";
-    var result = await apiService.getDetailRestaurant(restaurantId);
-    expect(result.restaurant.id, restaurantId);
   });
 }
